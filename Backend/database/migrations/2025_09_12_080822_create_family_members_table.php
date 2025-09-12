@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('family_members', function (Blueprint $table) {
-            $table->uui('id')->primary();
+            $table->uuid('id')->primary();
 
             $table->uuid('head_of_family_id');
             $table->foreign('head_of_family_id')->references('id')->on('head_of_families');
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             
             $table->string('profile_picture')->nullable();
-            $table->int('identity_number')->unique();
+            $table->integer('identity_number')->unique();
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
             $table->string('phone_number')->nullable();

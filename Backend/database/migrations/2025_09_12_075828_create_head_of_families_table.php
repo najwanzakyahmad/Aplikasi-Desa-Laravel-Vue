@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->string('profile_picture')->nullable();
-            $tabel->int('inditity_number')->unique();
+            $table->integer('inditity_number')->unique();
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
-            $tables->string('phone_number')->nullable();
+            $table->string('phone_number')->nullable();
             $table->string('occupation')->nullable();
             $table->enum('marital_status', ['single', 'married']);
 
