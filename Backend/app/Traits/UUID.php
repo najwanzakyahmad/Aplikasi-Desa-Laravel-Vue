@@ -7,30 +7,30 @@ use Illuminate\Support\Str;
 trait UUID
 {
     /**
-     * Boot function from Laravel.
+     * Dipanggil Eloquent saat model yang menggunakan trait di-instantiate.
+     * Set default supaya PK bukan auto-increment dan tipe key string (UUID).
      */
-    protected static function bootUUID()
+    protected function initializeUUID(): void
     {
-        parent::boot();
+        // Cara 1: set properti
+        $this->incrementing = false;
+        $this->keyType = 'string';
 
-        static::creating(function ($model) {
-            if($model->getKey() === null) {
-                $model->setAttribute($model->getKeyName(), Str::uuid()->toString());
-            }
-        });
+        // Cara 2 (opsional): gunakan setter
+        // $this->setIncrementing(false);
+        // $this->setKeyType('string');
     }
 
     /**
-     * Disable auto-incrementing as we are using UUIDs.
-     *
-     * @var bool
+     * Dipanggil otomatis oleh Eloquent untuk trait.
+     * Generate UUID saat creating jika belum ada key.
      */
-    public $incrementing = false;
-
-    /**
-     * Set the key type to string for UUIDs.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
+    protected static function bootUUID(): void
+    {
+        static::creating(function ($model) {
+            if (!$model->getKey()) {
+                $model->setAttribute($model->getKeyName(), (string) Str::uuid());
+            }
+        });
+    }
 }
