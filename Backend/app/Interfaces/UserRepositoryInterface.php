@@ -5,7 +5,7 @@ namespace App\Interfaces;
 interface UserRepositoryInterface
 {
     public function getAll(
-        ?string $search, 
+        ?string $search,
         ?int $limit,
         bool $execute
     );
@@ -15,9 +15,5 @@ interface UserRepositoryInterface
         ?int $rowPerPage
     );
 
-//     public function (
-//         ?string 
-//     );
-//     public function ();
-//     public function ();
+    public function create(array $data);
 }
