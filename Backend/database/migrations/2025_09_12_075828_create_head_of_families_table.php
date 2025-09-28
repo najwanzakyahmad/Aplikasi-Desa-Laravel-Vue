@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->string('profile_picture')->nullable();
-            $table->integer('inditity_number')->unique();
+            $table->bigInteger('inditity_number')->unique();
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
             $table->string('phone_number')->nullable();
