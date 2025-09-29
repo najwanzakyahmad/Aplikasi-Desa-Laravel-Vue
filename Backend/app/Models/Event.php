@@ -20,6 +20,18 @@ class Event extends Model
         'is_active'
     ];
 
+    protected $cast = [
+        'is_active' => 'boolean',
+        'date'      => 'date:Y-m-d',
+    ];
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('name', 'like', '%'. $search. '%')
+            ->orWhere('price', 'like', '%'. $search. '%')
+            ->orWhere('description', 'like', '%'. $search. '%');
+    }
+
     public function eventParticipants()
     {
         return $this->hasMany(EventParticipant::class);
