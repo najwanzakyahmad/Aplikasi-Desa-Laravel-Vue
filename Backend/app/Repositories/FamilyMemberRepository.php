@@ -14,12 +14,13 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
         ?int $limit,
         bool $execute
     ){
-        $query = FamilyMember::where(function ($query) use ($search){
-            //jika ada parameter search, maka akan mengambil data berdasarkan search
-            if ($search) {
-                $query->search($search);
-            }
-        });
+        $query = FamilyMember::with(['user'])
+            ->where(function ($query) use ($search){
+                //jika ada parameter search, maka akan mengambil data berdasarkan search
+                if ($search) {
+                    $query->search($search);
+                }
+            });
 
         if($limit) {
             //take adalah mengambil data beberapa berdasarkan limit
@@ -49,7 +50,8 @@ class FamilyMemberRepository implements FamilyMemberRepositoryInterface
     public function getById(
         string $id
     ){
-        $query = FamilyMember::where('id', $id)->with('headOfFamily');
+        $query = FamilyMember::with(['user', 'headOfFamily'])
+            ->where('id', $id);
 
         return $query->first();
     }

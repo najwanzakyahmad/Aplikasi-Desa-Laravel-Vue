@@ -47,7 +47,7 @@ class SocialAssistanceRepository implements SocialAssistanceRepositoryInterface
     public function getById(
         string $id
     ){
-        $query = SocialAssistance::where('id', $id);
+        $query = SocialAssistance::with('socialAssistanceRecipients')->where('id', $id);
 
         return $query->first();
     }
