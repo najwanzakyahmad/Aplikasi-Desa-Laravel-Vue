@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class EventParticipantUpdateRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'event_id'          => 'required|string|exists:events,id',
+            'head_of_family_id' => 'required|string|exists:head_of_families,id',
+            'quantity'          => 'required|integer',
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'event_id'          => 'Event',
+            'head_of_family_id' => 'Kepala Keluarga',
+            'quantity'          => 'Quantity',
+        ];
+    }
+}

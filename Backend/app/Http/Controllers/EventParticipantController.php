@@ -3,20 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Helper\ResponseHelper;
-use App\Http\Requests\EventStoreRequest;
-use App\Http\Requests\EventUpdateRequest;
-use App\Http\Resources\EventResource;
+use App\Http\Requests\EventParticipantStoreRequest;
+use App\Http\Requests\EventParticipantUpdateRequest;
+use App\Http\Resources\EventParticipantResource;
 use App\Http\Resources\PaginateResource;
-use App\Interfaces\EventRepositoryInterface;
+use App\Interfaces\EventParticipantRepositoryInterface;
 use Illuminate\Http\Request;
 
-class EventController extends Controller
+class EventParticipantController extends Controller
 {
-    private EventRepositoryInterface $eventRepository;
+    private EventParticipantRepositoryInterface $eventParticipantReposity;
 
-    public function __construct(EventRepositoryInterface $eventRepository)
-    {
-        $this->eventRepository = $eventRepository;
+    public function __construct(EventParticipantRepositoryInterface $eventParticipantReposity) {
+        $this->eventParticipantReposity = $eventParticipantReposity;
     }
     /**
      * Display a listing of the resource.
@@ -24,7 +23,7 @@ class EventController extends Controller
     public function index(Request $request)
     {
         try {
-            $events = $this->eventRepository->getAll(
+            $events = $this->eventParticipantReposity->getAll(
                 $request->search,
                 $request->limit,
                 true
@@ -45,8 +44,8 @@ class EventController extends Controller
 
             return ResponseHelper::jsonResponse(
                 true,
-                "Berhasil mendapatkan seluruh data event. Total data: {$total}",
-                EventResource::collection($events),
+                "Berhasil mendapatkan seluruh data partisipan event. Total data: {$total}",
+                EventParticipantResource::collection($events),
                 200
             );
         } catch (\Exception $e) {
@@ -67,15 +66,15 @@ class EventController extends Controller
                 'row_per_page' => 'required|integer'
             ]);
 
-            $events = $this->eventRepository->getAllPaginated(
+            $events = $this->eventParticipantReposity->getAllPaginated(
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil mendapatkan data event.',
-                PaginateResource::make($events, EventResource::class),
+                'Berhasil mendapatkan data partisipan event.',
+                PaginateResource::make($events, EventParticipantResource::class),
                 200
             );
         } catch (\Exception $e) {
@@ -91,17 +90,17 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(EventStoreRequest $request)
+    public function store(EventParticipantStoreRequest $request)
     {
         $request = $request->validated();
 
         try {
-            $events = $this->eventRepository->create($request);
+            $events = $this->eventParticipantReposity->create($request);
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil menambahkan event',
-                new EventResource($events),
+                'Berhasil menambahkan partisipan event',
+                new EventParticipantResource($events),
                 201
             );
         } catch (\Exception $e) {
@@ -120,14 +119,14 @@ class EventController extends Controller
     public function show(string $id)
     {
         try {
-            $event = $this->eventRepository->getById(
+            $event = $this->eventParticipantReposity->getById(
                 $id
             );
 
             if(!$event){
                 return ResponseHelper::jsonResponse(
                     false,
-                    'Event tidak ditemukan',
+                    'Partisipan event tidak ditemukan',
                     null,
                     404
                 );
@@ -135,8 +134,8 @@ class EventController extends Controller
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil mendapatkan event berdasarkan ID',
-                new EventResource($event),
+                'Berhasil mendapatkan partisipan event berdasarkan ID',
+                new EventParticipantResource($event),
                 200
             );
         } catch (\Exception $e) {
@@ -152,30 +151,30 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(EventUpdateRequest $request, string $id)
+    public function update(EventParticipantUpdateRequest $request, string $id)
     {
         $data = $request->validated();
 
         try {
-            $event = $this->eventRepository->getById(
+            $event = $this->eventParticipantReposity->getById(
                 $id
             );
 
             if(!$event){
                 return ResponseHelper::jsonResponse(
                     false,
-                    'Event tidak ditemukan',
+                    'Partisipan event tidak ditemukan',
                     null,
                     404
                 );
             }
 
-            $event = $this->eventRepository->update($id, $data);
+            $event = $this->eventParticipantReposity->update($id, $data);
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil memperbarui event',
-                new EventResource($event),
+                'Berhasil memperbarui partisipan event',
+                new EventParticipantResource($event),
                 200
             );
         } catch (\Exception $e) {
@@ -194,22 +193,22 @@ class EventController extends Controller
     public function destroy(string $id)
     {
         try {
-            $event = $this->eventRepository->getById($id);
+            $event = $this->eventParticipantReposity->getById($id);
 
             if(!$event){
                 return ResponseHelper::jsonResponse(
                     false,
-                    'Event tidak ditemukan',
+                    'Partisipan event tidak ditemukan',
                     null,
                     404
                 );
             }
 
-            $event = $this->eventRepository->delete($id);
+            $event = $this->eventParticipantReposity->delete($id);
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil menghapus event',
+                'Berhasil menghapus partisipan event',
                 null,
                 200
             );
