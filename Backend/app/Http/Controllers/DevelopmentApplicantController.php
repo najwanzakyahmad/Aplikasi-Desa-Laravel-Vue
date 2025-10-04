@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Helper\ResponseHelper;
-use App\Http\Requests\DevelopmentStoreRequest;
-use App\Http\Requests\DevelopmentUpdateRequest;
-use App\Http\Resources\DevelopmentResource;
+use App\Http\Requests\DevelopmentApplicantStoreRequest;
+use App\Http\Requests\DevelopmentApplicantUpdateRequest;
+use App\Http\Resources\DevelopmentApplicantResource;
 use App\Http\Resources\PaginateResource;
-use App\Interfaces\DevelopmentRepositoryInterface;
+use App\Interfaces\DevelopmentApplicantRepositoryInterface;
 use Illuminate\Http\Request;
 
-class DevelopmentController extends Controller
+class DevelopmentApplicantController extends Controller
 {
-    private DevelopmentRepositoryInterface $developmentRepository;
+    private DevelopmentApplicantRepositoryInterface $developmentApplicantRepository;
 
-    public function __construct(DevelopmentRepositoryInterface $developmentRepository) {
-        $this->developmentRepository = $developmentRepository;
+    public function __construct(DevelopmentApplicantRepositoryInterface $developmentApplicantRepository) {
+        $this->developmentApplicantRepository = $developmentApplicantRepository;
     }
     /**
      * Display a listing of the resource.
@@ -23,29 +23,29 @@ class DevelopmentController extends Controller
     public function index(Request $request)
     {
         try {
-            $developments = $this->developmentRepository->getAll(
+            $developmentApplicants = $this->developmentApplicantRepository->getAll(
                 $request->search,
                 $request->limit,
                 true
             );
 
             // Hitung total dengan aman untuk 3 kemungkinan tipe:
-            if (method_exists($developments, 'total')) {
+            if (method_exists($developmentApplicants, 'total')) {
                 // LengthAwarePaginator / Paginator
-                $total = $developments->total();           // total semua data (bukan hanya per halaman)
-                $pageCount = $developments->count();       // item di halaman saat ini (opsional)
-            } elseif (method_exists($developments, 'count')) {
+                $total = $developmentApplicants->total();           // total semua data (bukan hanya per halaman)
+                $pageCount = $developmentApplicants->count();       // item di halaman saat ini (opsional)
+            } elseif (method_exists($developmentApplicants, 'count')) {
                 // Collection
-                $total = $developments->count();
+                $total = $developmentApplicants->count();
             } else {
                 // Fallback ke count() PHP
-                $total = count($developments);
+                $total = count($developmentApplicants);
             }
 
             return ResponseHelper::jsonResponse(
                 true,
-                "Berhasil mendapatkan seluruh data pengembangan. Total data: {$total}",
-                DevelopmentResource::collection($developments),
+                "Berhasil mendapatkan seluruh data penerima pengembangan. Total data: {$total}",
+                DevelopmentApplicantResource::collection($developmentApplicants),
                 200
             );
         } catch (\Exception $e) {
@@ -66,15 +66,15 @@ class DevelopmentController extends Controller
                 'row_per_page' => 'required|integer'
             ]);
 
-            $developments = $this->developmentRepository->getAllPaginated(
+            $developmentApplicants = $this->developmentApplicantRepository->getAllPaginated(
                 $request['search'] ?? null,
                 $request['row_per_page']
             );
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil mendapatkan data pengembangan.',
-                PaginateResource::make($developments, DevelopmentResource::class),
+                'Berhasil mendapatkan data penerima pengembangan.',
+                PaginateResource::make($developmentApplicants, DevelopmentApplicantResource::class),
                 200
             );
         } catch (\Exception $e) {
@@ -90,17 +90,17 @@ class DevelopmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(DevelopmentStoreRequest $request)
+    public function store(DevelopmentApplicantStoreRequest $request)
     {
         $request = $request->validated();
 
         try {
-            $developments = $this->developmentRepository->create($request);
+            $developmentApplicants = $this->developmentApplicantRepository->create($request);
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil menambahkan pengembangan',
-                new DevelopmentResource($developments),
+                'Berhasil menambahkan penerima pengembangan',
+                new DevelopmentApplicantResource($developmentApplicants),
                 201
             );
         } catch (\Exception $e) {
@@ -119,14 +119,14 @@ class DevelopmentController extends Controller
     public function show(string $id)
     {
         try {
-            $development = $this->developmentRepository->getById(
+            $developmentApplicant = $this->developmentApplicantRepository->getById(
                 $id
             );
 
-            if(!$development){
+            if(!$developmentApplicant){
                 return ResponseHelper::jsonResponse(
                     false,
-                    'Pengembangan tidak ditemukan',
+                    'Penerima pengembangan tidak ditemukan',
                     null,
                     404
                 );
@@ -134,8 +134,8 @@ class DevelopmentController extends Controller
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil mendapatkan pengembangan berdasarkan ID',
-                new DevelopmentResource($development),
+                'Berhasil mendapatkan penerima pengembangan berdasarkan ID',
+                new DevelopmentApplicantResource($developmentApplicant),
                 200
             );
         } catch (\Exception $e) {
@@ -151,30 +151,30 @@ class DevelopmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(DevelopmentUpdateRequest $request, string $id)
+    public function update(DevelopmentApplicantUpdateRequest $request, string $id)
     {
         $data = $request->validated();
 
         try {
-            $development = $this->developmentRepository->getById(
+            $developmentApplicant = $this->developmentApplicantRepository->getById(
                 $id
             );
 
-            if(!$development){
+            if(!$developmentApplicant){
                 return ResponseHelper::jsonResponse(
                     false,
-                    'Pengembangan tidak ditemukan',
+                    'Penerima Pengembangan tidak ditemukan',
                     null,
                     404
                 );
             }
 
-            $development = $this->developmentRepository->update($id, $data);
+            $developmentApplicant = $this->developmentApplicantRepository->update($id, $data);
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil memperbarui pengembangan',
-                new DevelopmentResource($development),
+                'Berhasil memperbarui penerima pengembangan',
+                new DevelopmentApplicantResource($developmentApplicant),
                 200
             );
         } catch (\Exception $e) {
@@ -193,22 +193,22 @@ class DevelopmentController extends Controller
     public function destroy(string $id)
     {
         try {
-            $development = $this->developmentRepository->getById($id);
+            $developmentApplicant = $this->developmentApplicantRepository->getById($id);
 
-            if(!$development){
+            if(!$developmentApplicant){
                 return ResponseHelper::jsonResponse(
                     false,
-                    'Pengembangan tidak ditemukan',
+                    'Penerima Pengembangan tidak ditemukan',
                     null,
                     404
                 );
             }
 
-            $development = $this->developmentRepository->delete($id);
+            $developmentApplicant = $this->developmentApplicantRepository->delete($id);
 
             return ResponseHelper::jsonResponse(
                 true,
-                'Berhasil menghapus pengembangan',
+                'Berhasil menghapus penerima pengembangan',
                 null,
                 200
             );
