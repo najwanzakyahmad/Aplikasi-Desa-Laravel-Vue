@@ -8,11 +8,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\UUID;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Traits\HasRoles;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, UUID, SoftDeletes;
+    use HasFactory, Notifiable, UUID, SoftDeletes, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -47,6 +49,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Specify the guard name for Spatie Permission
+     */
+    protected $guard_name = 'sanctum';
 
     public function scopeSearch($query, $search)
     {
