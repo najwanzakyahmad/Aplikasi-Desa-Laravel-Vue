@@ -1,16 +1,25 @@
 <script setup>
-    import SidebarItem from './SidebarItem.vue';
-    import iconChartActive from '@/assets/images/icons/chart-square-dark-green.svg'
-    import iconChartInactive from '@/assets/images/icons/chart-square-secondary-green.svg'
+import SidebarItem from './SidebarItem.vue';
 
-    const sidebarItems = [
-        {
-            label : '',
-            path : '/',
-            iconActive:  iconChartActive,
-            iconInactive: iconChartInactive
-        }
-    ]
+import iconChartActive from '@/assets/images/icons/chart-square-dark-green.svg'
+import iconChartInactive from '@/assets/images/icons/chart-square-secondary-green.svg'
+import iconCrownActive from '@/assets/images/icons/crown-dark-green.svg'
+import iconCrownInactive from '@/assets/images/icons/crown-secondary-green.svg'
+
+const sidebarItems = [
+    {
+        label : 'Dashboard',
+        path : '/',
+        iconActive:  iconChartActive,
+        iconInactive: iconChartInactive
+    },
+    {
+        label : 'Head Of Family',
+        path : '/head-of-family',
+        iconActive:  iconCrownActive,
+        iconInactive: iconCrownInactive
+    },
+]
 </script>
 
 <template>

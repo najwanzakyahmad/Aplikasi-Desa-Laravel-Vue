@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Dashboard from '@/views/Dashboard.vue'
 import Main from '@/layouts/Main.vue'
 import Auth from '@/layouts/Auth.vue'
 import Login from '@/views/Login.vue'
 import { useAuthStore } from '@/stores/auth'
+
+import Dashboard from '@/views/Dashboard.vue'
+import HeadOfFamilies from '@/views/head-of-family/HeadOfFamilies.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +21,15 @@ const router = createRouter({
           meta: { 
             requiresAuth: true,
             permission: 'dashboard-menu'
+          }
+        },
+        {
+          path : 'head-of-family',
+          name: 'head-of-family',
+          component: HeadOfFamilies,
+          meta: { 
+            requiresAuth: true,
+            permission: 'head-of-family-list'
           }
         },
       ]
