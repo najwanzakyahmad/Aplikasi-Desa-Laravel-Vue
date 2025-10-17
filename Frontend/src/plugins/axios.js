@@ -1,23 +1,23 @@
+// src/plugins/axios.js
 import axios from "axios";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 
-const token =  Cookies.get('token')
+const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api",
+  headers: {
+    Accept: "application/json",
+    // Content-Type biasanya di-set otomatis oleh axios.
+    // Kalau perlu multipart/json, set di call masing-masing.
+  },
+  withCredentials: false, // ubah ke true kalau butuh cookie cross-site
+});
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
-axios.defaults.headers.common['Content-Type'] = 'multipart/form-data'
-axios.defaults.headers.common['Content-Type'] = 'application/json'
-axios.defaults.headers.common['Content-Type'] = `Bearer ${token}`
+axiosInstance.interceptors.request.use((config) => {
+  const token = Cookies.get("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
-axios.interceptors.request.use(
-    config => {
-        const token = Cookies.get('token')
-        if(token) {
-            config.headers.Authorization = `Bearer ${token}`
-        }
-
-        return config
-    }
-)
-
-export default axiosInstance = axios
+export default axiosInstance;
