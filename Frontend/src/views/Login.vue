@@ -9,9 +9,8 @@ import IconProfileSecondaryGreen from '@/assets/images/icons/user-secondary-gree
 import IconProfileBlack from '@/assets/images/icons/user-black.svg'
 import IconKeySecondaryGreen from '@/assets/images/icons/key-secondary-green.svg'
 import IconKeyBlack from '@/assets/images/icons/key-black.svg'
-import { useRouter } from 'vue-router';
+import router from '@/router';
 
-const router = useRouter()
 const authStore = useAuthStore()
 const { loading, error } = storeToRefs(authStore)
 const { login } = authStore
@@ -27,7 +26,7 @@ const handleSubmit = async () => {
     console.log("status", ok)
     if (ok) {
         await nextTick()
-        router.replace({ name: 'dashboard' })
+        router.push({name: 'dashboard'})
     }
     // await login(form.value)
 

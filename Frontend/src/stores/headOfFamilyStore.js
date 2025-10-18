@@ -44,6 +44,34 @@ export const  useHeadOfFamilyStore = defineStore('head-of-family', {
             } finally {
                 this.loading = false
             }
+        },
+
+        async fetchHeadOfFamily(id) {
+            this.loading = true
+
+            try {
+                const response = await axiosInstance.get(`head-of-family/${id}`)
+
+                return response.data.data
+            } catch (error) {
+                this.error = handleError(error)                
+            } finally {
+                this.loading = false
+            }
+        },
+
+        async deleteHeadOfFamily(id) {
+            this.loading = true
+
+            try {
+                const response = await axiosInstance.delete(`head-of-family/${id}`)
+
+                this.success = response.data.message
+            } catch (error) {
+                this.error = handleError(error)                
+            } finally {
+                this.loading = false
+            }
         }
     }
 })

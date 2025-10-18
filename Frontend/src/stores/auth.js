@@ -2,8 +2,7 @@ import { defineStore } from "pinia";
 import { handleError } from "@/helpers/errorHelper";
 import axiosInstance from '@/plugins/axios';
 import Cookies from "js-cookie";
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import router from "@/router";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -44,7 +43,7 @@ export const useAuthStore = defineStore('auth', {
 
                 Cookies.remove('token')
             
-                router.push({ name: 'login' })
+                router.push({name: 'login'})
                 this.user = null
                 this.error = null
                 this.success = ('Logout Successful')

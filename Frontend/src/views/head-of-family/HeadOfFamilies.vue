@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia';
 import { onMounted, ref, watch } from 'vue';
 
 const headOfFamilyStore = useHeadOfFamilyStore()
-const { headOfFamilies, meta, loading, success } = storeToRefs(headOfFamilyStore)
+const { headOfFamilies, meta, loading, success, error } = storeToRefs(headOfFamilyStore)
 const { fetchHeadOfFamiliesPaginated } = headOfFamilyStore
 
 const serverOptions = ref({
@@ -44,6 +44,23 @@ watch(filters, () => {
             <p class="font-medium text-white">Add New</p>
         </a>
     </div>
+
+    
+    <div v-if="success" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-2xl relative mb-4" role="alert">
+        <span class="block sm:inline">{{ success }}</span>
+        <button type="button" @click="success = null" class="absolute top-1/2 -translate-y-1/2 right-4">
+            <img src="@/assets/images/icons/close-circle-white.svg" alt="icon" class="flex size-6 shrink-0">
+        </button>
+    </div>
+
+    
+    <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-2xl relative mb-4" role="alert">
+        <span class="block sm:inline">{{ error }}</span>
+        <button type="button" @click=" error = null" class="absolute top-1/2 -translate-y-1/2 right-4">
+            <img src="@/assets/images/icons/close-circle-white.svg" alt="icon" class="flex size-6 shrink-0">
+        </button>
+    </div>
+
     <section id="List-Kepala-Rumah" class="flex flex-col gap-[14px]">
         <form id="Page-Search" class="flex items-center justify-between">
             <div class="flex flex-col gap-3 w-[370px] shrink-0">

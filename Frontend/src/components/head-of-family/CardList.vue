@@ -1,4 +1,6 @@
 <script setup>
+import { RouterLink } from 'vue-router';
+
 defineProps({
     item: {
         type: Object,
@@ -32,8 +34,8 @@ defineProps({
             <img src="@/assets/images/icons/profile-2user-blue.svg" class="flex size-[18px] shrink-0" alt="icon">
             <span class="font-medium text-desa-blue">{{ item.family_members?.length ?? 0  }} Anggota Keluarga</span>
         </p>
-        <a href="kd-kepala-rumah-manage.html" class="flex items-center shrink-0 gap-[10px] rounded-2xl py-4 px-6 bg-desa-black">
+        <RouterLink :to="{name: 'manage-head-of-family', params: {id: item.id}}" class="flex items-center shrink-0 gap-[10px] rounded-2xl py-4 px-6 bg-desa-black">
             <span class="font-medium text-white">Manage</span>
-        </a>
+        </RouterLink>
     </div>
 </template>
