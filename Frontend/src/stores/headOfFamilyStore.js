@@ -1,5 +1,6 @@
 import { handleError } from "@/helpers/errorHelper";
 import axiosInstance from "@/plugins/axios";
+import router from "@/router";
 import { defineStore } from "pinia";
 
 export const  useHeadOfFamilyStore = defineStore('head-of-family', {
@@ -55,6 +56,40 @@ export const  useHeadOfFamilyStore = defineStore('head-of-family', {
                 return response.data.data
             } catch (error) {
                 this.error = handleError(error)                
+            } finally {
+                this.loading = false
+            }
+        },
+
+        async createHeadOfFamily(payload) {
+            this.loading = true
+            this.error = null
+            try {
+                const fd = new FormData()
+
+                // append field primitif yang ada
+                for (const [key, val] of Object.entries(payload)) {
+                if (val === null || val === undefined) continue
+                if (key === 'profile_picture_url') continue // ini hanya untuk preview
+                if (key === 'profile_picture') continue     // handle khusus di bawah
+                fd.append(key, val)
+                }
+
+                // file harus File object
+                if (payload.profile_picture instanceof File) {
+                fd.append('profile_picture', payload.profile_picture)
+                }
+
+                // JANGAN set Content-Type manual; biar browser yang set (dengan boundary)
+                const { data } = await axiosInstance.post('head-of-family', fd)
+
+                this.success = data.message
+                router.push({ name: 'head-of-family' })
+                return data
+            } catch (error) {
+                // simpan detail validation errors dari Laravel
+                this.error = handleError(error)
+                throw error
             } finally {
                 this.loading = false
             }

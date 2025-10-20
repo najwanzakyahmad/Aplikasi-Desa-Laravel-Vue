@@ -16,10 +16,10 @@ return new class extends Migration
 
             $table->uuid('head_of_family_id');
             $table->foreign('head_of_family_id')->references('id')->on('head_of_families');
-            
+
             $table->string('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            
+
             $table->string('profile_picture')->nullable();
             $table->integer('identity_number')->unique();
             $table->enum('gender', ['male', 'female']);

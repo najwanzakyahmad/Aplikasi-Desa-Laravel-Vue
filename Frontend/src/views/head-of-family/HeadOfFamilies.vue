@@ -39,10 +39,10 @@ watch(filters, () => {
 <template>
     <div id="Header" class="flex items-center justify-between">
         <h1 class="font-semibold text-2xl">Kepala Rumah </h1>
-        <a href="kd-kepala-rumah-add.html" class="flex items-center rounded-2xl py-4 px-6 gap-[10px] bg-desa-dark-green">
+        <RouterLink :to="{name: 'create-head-of-family'}" class="flex items-center rounded-2xl py-4 px-6 gap-[10px] bg-desa-dark-green">
             <img src="@/assets/images/icons/add-square-white.svg" class="flex size-6 shrink-0" alt="icon">
             <p class="font-medium text-white">Add New</p>
-        </a>
+        </RouterLink>
     </div>
 
     
