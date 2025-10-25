@@ -10,7 +10,7 @@ import { formatRupiah, formatToClientTimezone } from '@/helpers/format';
 const socialAssistace = ref({})
 
 const socialAssistanceStore = useSocialAssistanceStore()
-const { loading } = storeToRefs(socialAssistanceStore)
+const { loading, error, success } = storeToRefs(socialAssistanceStore)
 const { fetchSocialAssistance, deleteSocialAssistance } = socialAssistanceStore
 
 const route = useRoute()
@@ -52,6 +52,22 @@ onMounted(fetchData)
             </RouterLink>
         </div>
     </div>
+
+    <div v-if="success" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-2xl relative mb-4" role="alert">
+        <span class="block sm:inline">{{ success }}</span>
+        <button type="button" @click="success = null" class="absolute top-1/2 -translate-y-1/2 right-4">
+            <img src="@/assets/images/icons/close-circle-white.svg" alt="icon" class="flex size-6 shrink-0">
+        </button>
+    </div>
+
+    
+    <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-2xl relative mb-4" role="alert">
+        <span class="block sm:inline">{{ error }}</span>
+        <button type="button" @click=" error = null" class="absolute top-1/2 -translate-y-1/2 right-4">
+            <img src="@/assets/images/icons/close-circle-white.svg" alt="icon" class="flex size-6 shrink-0">
+        </button>
+    </div>
+
     <div class="flex gap-[14px]">
         <section id="Informasi-Bantuan-Sosial" class="flex flex-col shrink-0 w-[calc(545/1000*100%)] h-fit rounded-3xl p-6 gap-6 bg-white">
             <p class="font-medium leading-5 text-desa-secondary">Informasi Bantuan Sosial</p>

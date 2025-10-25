@@ -96,6 +96,24 @@ export const useSocialAssistanceStore = defineStore('social-assistance', {
             }
         },
 
+        async updateSocialAssistance(payload) {
+            this.loading = true
+            try {
+                const body = {
+                ...payload,
+                amount: normalizeAmountToDecimal2(payload.amount), 
+                _method: 'PUT',
+                }
+
+                const response = await axiosInstance.post(`social-assistance/${payload.id}`, body)
+                this.success = response.data.message
+            } catch (error) {
+                this.error = handleError(error)
+            } finally {
+                this.loading = false
+            }
+        },
+
         async deleteSocialAssistance(id) {
             this.loading = true
 
@@ -111,3 +129,60 @@ export const useSocialAssistanceStore = defineStore('social-assistance', {
         }
     }
 })
+
+function normalizeAmountToDecimal2(input) {
+  if (input === null || input === undefined) return '0.00'
+  let s = String(input).trim()
+
+  // simpan tanda minus di depan jika ada
+  const isNeg = s.startsWith('-')
+  s = s.replace(/(?!^)-/g, '') // hilangkan minus selain di awal
+
+  // sisakan hanya digit, koma, titik, minus
+  s = s.replace(/[^\d,.\-]/g, '')
+
+  const hasDot = s.includes('.')
+  const hasComma = s.includes(',')
+
+  if (hasDot && hasComma) {
+    // ada keduanya -> anggap pemisah desimal adalah yang paling kanan
+    const lastDot = s.lastIndexOf('.')
+    const lastComma = s.lastIndexOf(',')
+    const decimalSep = lastDot > lastComma ? '.' : ','
+    const thousandsSep = decimalSep === '.' ? ',' : '.'
+    s = s.split(thousandsSep).join('')           // buang ribuan
+    if (decimalSep === ',') s = s.replace(',', '.') // normalisasi desimal ke titik
+  } else if (hasComma && !hasDot) {
+    // hanya koma: tentukan ribuan vs desimal pakai pola 3 digit di belakang
+    const parts = s.split(',')
+    const lastLen = parts[parts.length - 1].length
+    const looksLikeThousands = parts.length > 1 && lastLen === 3 && parts.slice(0, -1).every(p => p.length > 0 && p.length <= 3)
+    if (looksLikeThousands) {
+      // contoh: 80,000 -> 80000
+      s = parts.join('')
+    } else {
+      // contoh: 12,5 -> 12.5
+      s = parts.join('.')
+    }
+  } else if (!hasComma && hasDot) {
+    // hanya titik: tentukan ribuan vs desimal
+    const parts = s.split('.')
+    const lastLen = parts[parts.length - 1].length
+    const looksLikeThousands = parts.length > 1 && lastLen === 3 && parts.slice(0, -1).every(p => p.length > 0 && p.length <= 3)
+    if (looksLikeThousands) {
+      // contoh: 80.000 -> 80000
+      s = parts.join('')
+    } else {
+      // contoh: 12.5 -> 12.5 (sudah desimal)
+      // biarkan
+    }
+  } else {
+    // hanya digit
+  }
+
+  const n = parseFloat(s)
+  const val = Number.isFinite(n) ? n : 0
+  const withSign = isNeg ? -val : val
+  return withSign.toFixed(2)
+}
+
