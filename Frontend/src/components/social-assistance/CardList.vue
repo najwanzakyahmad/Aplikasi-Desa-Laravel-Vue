@@ -46,7 +46,7 @@ defineProps({
                     <img src="@/assets/images/icons/profile-2user-blue.svg" class="flex size-6 shrink-0" alt="icon">
                 </div>
                 <div class="flex flex-col gap-1">
-                    <p class="font-semibold text-lg leading-5 text-desa-blue">15.600 Warga</p>
+                    <p class="font-semibold text-lg leading-5 text-desa-blue">{{ item.social_assistance_recipients?.length }} Warga</p>
                     <p class="font-medium text-sm text-desa-secondary">Total Pengajuan</p>
                 </div>
             </div>
