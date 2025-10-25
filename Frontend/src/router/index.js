@@ -11,6 +11,7 @@ import HeadOfFamilyCreate from '@/views/head-of-family/HeadOfFamilyCreate.vue'
 import SocialAssistances from '@/views/social-assistance/SocialAssistances.vue'
 import SocialAssistance from '@/views/social-assistance/SocialAssistance.vue'
 import SocialAssistanceEdit from '@/views/social-assistance/SocialAssistanceEdit.vue'
+import SocialAssistanceCreate from '@/views/social-assistance/SocialAssistanceCreate.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,6 +81,15 @@ const router = createRouter({
           meta: { 
             requiresAuth: true,
             permission: 'social-assistance-edit'
+          }
+        },
+        {
+          path : 'social-assistance/create',
+          name: 'create-social-assistance',
+          component: SocialAssistanceCreate,
+          meta: { 
+            requiresAuth: true,
+            permission: 'social-assistance-create'
           }
         },
       ]

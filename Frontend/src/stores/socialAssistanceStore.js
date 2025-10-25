@@ -1,5 +1,6 @@
 import { handleError } from "@/helpers/errorHelper";
 import axiosInstance from "@/plugins/axios";
+import router from "@/router";
 import { defineStore } from "pinia";
 
 
@@ -68,12 +69,20 @@ export const useSocialAssistanceStore = defineStore('social-assistance', {
             try {
                 const fd = new FormData()
 
-                // append field primitif yang ada
+                // helper: append nilai ke FormData dengan aman
+                const appendSafe = (key, val) => {
+                    if (val === null || val === undefined) return
+                    if (val instanceof File) return fd.append(key, val)
+                    if (typeof val === 'boolean') return fd.append(key, val ? '1' : '0')
+                    if (typeof val === 'object') return fd.append(key, JSON.stringify(val))
+                    return fd.append(key, String(val))
+                }
+
                 for (const [key, val] of Object.entries(payload)) {
-                    if (val === null || val === undefined) continue
-                    if (key === 'thumbnail_url') continue // ini hanya untuk preview
-                    if (key === 'thumbnail') continue     // handle khusus di bawah
-                    fd.append(key, val)
+                    if (key === 'thumbnail_url') continue // hanya untuk preview
+                    if (key === 'thumbnail') continue     // handle di bawah
+                    if (key === 'amount') continue        // JANGAN di-append di sini (biar dinormalisasi)
+                    appendSafe(key, val)
                 }
 
                 // file harus File object
@@ -81,20 +90,23 @@ export const useSocialAssistanceStore = defineStore('social-assistance', {
                     fd.append('thumbnail', payload.thumbnail)
                 }
 
-                // JANGAN set Content-Type manual; biar browser yang set (dengan boundary)
+                // amount wajib decimal:2 (tanpa separator ribuan)
+                fd.append('amount', normalizeAmountToDecimal2(payload.amount))
+
+                // POST (buat data baru, ga perlu _method)
                 const { data } = await axiosInstance.post('social-assistance', fd)
 
                 this.success = data.message
                 router.push({ name: 'social-assistance' })
                 return data
             } catch (error) {
-                // simpan detail validation errors dari Laravel
                 this.error = handleError(error)
                 throw error
             } finally {
                 this.loading = false
             }
         },
+
 
         async updateSocialAssistance(payload) {
             this.loading = true
