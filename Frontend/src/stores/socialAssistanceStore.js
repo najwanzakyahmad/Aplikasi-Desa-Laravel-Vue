@@ -1,11 +1,11 @@
 import { handleError } from "@/helpers/errorHelper";
 import axiosInstance from "@/plugins/axios";
-import router from "@/router";
 import { defineStore } from "pinia";
 
-export const useHeadOfFamilyStore = defineStore('head-of-family', {
+
+export const useSocialAssistanceStore = defineStore('social-assistance', {
     state: () => ({
-        headOfFamilies: [],
+        socialAssistances: [],
         meta: {
             current_page: 1,
             last_page: 1,
@@ -18,40 +18,40 @@ export const useHeadOfFamilyStore = defineStore('head-of-family', {
     }),
 
     actions: {
-        async fetchHeadOfFamilies(params) {
+        async fetchSocialAssistances(params) {
             this.loading = true
 
             try {
-                const response = await axiosInstance.get('head-of-family', {params})
+                const response = await axiosInstance.get('social-assistance', {params})
 
-                this.headOfFamilies = response.data.data
+                this.socialAssistances = response.data.data
             } catch (error) {
-                this.error = handleError(error)                
+                this.error = handleError(error)
             } finally {
                 this.loading = false
             }
         },
 
-        async fetchHeadOfFamiliesPaginated(params) {
+        async fetchSocialAssistancesPaginated(params) {
             this.loading = true
 
             try {
-                const response = await axiosInstance.get('head-of-family/all/paginated', {params})
+                const response = await axiosInstance.get('social-assistance/all/paginated', {params})
 
-                this.headOfFamilies = response.data.data.data
+                this.socialAssistances = response.data.data.data
                 this.meta = response.data.data.meta
             } catch (error) {
-                this.error = handleError(error)                
+                this.error = handleError(error)
             } finally {
                 this.loading = false
             }
         },
 
-        async fetchHeadOfFamily(id) {
+        async fetchSocialAssistance(id) {
             this.loading = true
 
             try {
-                const response = await axiosInstance.get(`head-of-family/${id}`)
+                const response = await axiosInstance.get(`social-assistance/${id}`)
 
                 return response.data.data
             } catch (error) {
@@ -61,30 +61,31 @@ export const useHeadOfFamilyStore = defineStore('head-of-family', {
             }
         },
 
-        async createHeadOfFamily(payload) {
+        async createSocialAssistance(payload) {
             this.loading = true
             this.error = null
+
             try {
                 const fd = new FormData()
 
                 // append field primitif yang ada
                 for (const [key, val] of Object.entries(payload)) {
                     if (val === null || val === undefined) continue
-                    if (key === 'profile_picture_url') continue // ini hanya untuk preview
-                    if (key === 'profile_picture') continue     // handle khusus di bawah
+                    if (key === 'thumbnail_url') continue // ini hanya untuk preview
+                    if (key === 'thumbnail') continue     // handle khusus di bawah
                     fd.append(key, val)
                 }
 
                 // file harus File object
-                if (payload.profile_picture instanceof File) {
-                    fd.append('profile_picture', payload.profile_picture)
+                if (payload.thumbnail instanceof File) {
+                    fd.append('thumbnail', payload.thumbnail)
                 }
 
                 // JANGAN set Content-Type manual; biar browser yang set (dengan boundary)
-                const { data } = await axiosInstance.post('head-of-family', fd)
+                const { data } = await axiosInstance.post('social-assistance', fd)
 
                 this.success = data.message
-                router.push({ name: 'head-of-family' })
+                router.push({ name: 'social-assistance' })
                 return data
             } catch (error) {
                 // simpan detail validation errors dari Laravel
@@ -95,11 +96,11 @@ export const useHeadOfFamilyStore = defineStore('head-of-family', {
             }
         },
 
-        async deleteHeadOfFamily(id) {
+        async deleteSocialAssistance(id) {
             this.loading = true
 
             try {
-                const response = await axiosInstance.delete(`head-of-family/${id}`)
+                const response = await axiosInstance.delete(`social-assistance/${id}`)
 
                 this.success = response.data.message
             } catch (error) {

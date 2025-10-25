@@ -54,7 +54,7 @@
                 </span>
                 <div class="relative flex size-6 shrink-0">
                     <img src="@/assets/images/icons/arrow-circle-dark-green-up.svg" class="absolute flex size-6 shrink-0 opacity-0 group-[.active]:opacity-100 transition-setup" alt="icon" v-if="isOpen">
-                    <img src="@/assets/images/icons/arrow-circle-secondary-green-down.svg" class="absolute flex size-6 shrink-0 opacity-100 group-[.active]:opacity-0 transition-setup" alt="icon" v-else>
+                    <img src="@/assets/images/icons/arrow-circle-secondary-green-down.svg" class="absolute flex size-6 shrink-0 opacity-100 group-[.active]:opacity-100 transition-setup" alt="icon" v-else>
                 </div>
             </button>
             
