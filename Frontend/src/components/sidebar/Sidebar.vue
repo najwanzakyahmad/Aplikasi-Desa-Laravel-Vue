@@ -30,6 +30,10 @@ const sidebarItems = [
             {
                 label: 'List Bansos',
                 path: '/social-assistance'
+            },
+            {
+                label: 'Pengajuan Bansos',
+                path: '/social-assistance-recipient'
             }
         ]
     },

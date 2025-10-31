@@ -14,11 +14,12 @@ class SocialAssistanceRecipientRepository implements SocialAssistanceRecipientRe
         ?int $limit,
         bool $execute
     ){
-        $query = SocialAssistanceRecipient::where(function ($query) use ($search){
-            if($search){
-                $query->search($search);
-            }
-        });
+        $query = SocialAssistanceRecipient::with(['socialAssistance', 'headOfFamily'])
+            ->where(function ($query) use ($search){
+                if($search) {
+                    $query->search($search);
+                }
+            });
 
         if($limit){
             $query->take($limit);

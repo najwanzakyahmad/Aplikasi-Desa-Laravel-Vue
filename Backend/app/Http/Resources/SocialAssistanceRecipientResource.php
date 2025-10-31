@@ -16,16 +16,15 @@ class SocialAssistanceRecipientResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            // 'social_assistance_id' => new SocialAssistanceResource($this->whenLoaded('socialAssistance')),
-            'head_of_family' => new HeadOfFamilyResource($this->headOfFamily),
             'bank' => $this->bank,
             'amount' => $this->amount,
             'reason' => $this->reason,
             'account_number' => $this->account_number,
             'proof' => $this->proof,
             'status'  => $this->status,
-            'social_assistance_id' => $this->social_assistance_id,
             'created_at' => $this->created_at,
+            'social_assistance' => new SocialAssistanceResource($this->whenLoaded('socialAssistance')),
+            'head_of_family' => new HeadOfFamilyResource($this->whenLoaded('headOfFamily')),
         ];
     }
 }

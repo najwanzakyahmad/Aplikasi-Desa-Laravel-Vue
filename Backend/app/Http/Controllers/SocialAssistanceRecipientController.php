@@ -97,7 +97,7 @@ class SocialAssistanceRecipientController extends Controller implements HasMiddl
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse(
                 false,
-                'Gagal mendapatkan data penerima bantuan sosial',
+                "Gagal mendapatkan data penerima bantuan sosial error. Error: {$e->getMessage()}",
                 null,
                 500
             );
